@@ -146,3 +146,20 @@ a directory or folder in the host is mounted to a directory or folder in the con
 ### docker compose 
 
 we can define the volumes inside docker compose - example is given in docker-compose.yaml file.
+
+# Topics need to be Covered
+
+## docker networks
+- Bridge networks
+- Custom networks
+- Docker DNS
+- Container communication
+
+## Labs
+- App + DB setup
+- Multi-container networking
+- Troubleshooting exercises
+
+## Key Learnings
+- Containers communicate via service names
+- Port mapping exposes services externally
