@@ -163,3 +163,43 @@ we can define the volumes inside docker compose - example is given in docker-com
 ## Key Learnings
 - Containers communicate via service names
 - Port mapping exposes services externally
+
+
+### virtual file system is filled can't create any more containers
+
+```
+docker system prune
+```
+
+### docker running slow
+
+```
+docker stats
+docker top
+docker inspect
+```
+
+### can't connect to docker client
+
+```
+docker context ls
+```
+
+A Docker context is basically a saved configuration that tells Docker:
+
+“Which Docker daemon/environment should I talk to?”
+
+By default, Docker talks to your local Docker engine, but contexts let you switch between:
+
+local Docker
+remote servers
+Docker Desktop
+cloud environments
+Kubernetes-enabled environments
+
+without changing commands.
+
+```
+docker context create my-server \
+  --docker "host=ssh://user@server-ip"
+```
