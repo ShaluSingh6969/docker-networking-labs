@@ -203,3 +203,41 @@ without changing commands.
 docker context create my-server \
   --docker "host=ssh://user@server-ip"
 ```
+
+## DNS issues with WSL + docker setup
+
+- sometimes your docker daemon is not able to get the correct DNS inside a VPN network let's say of a company.
+- hence, not able to connect to external network.
+- you can check the issue if it's at WSL level or docker level by simply running
+
+```
+wsl
+ping www.google.com
+```
+
+if above works it means wsl dns is working fine and issue is with the docker dns in docker network
+
+```
+docker run --rm alpine ping google.com
+```
+if it gives error bad request it means docker is not picking the right DNS inside the VPN 
+
+- check ipconfig all/ in cmd 
+- find the dns server under vpn network details
+- check the one used in docker using sudo /etc/resolv.conf
+- if both are different then use the one from ipconfig
+- run below command
+
+```
+sudo vim /etc/docker/daemon.json
+```
+
+add the below data
+
+```
+{
+  "dns": <vpn_dns_server from ipconfig>
+}
+```
+
+- save the file and again try the ping request
