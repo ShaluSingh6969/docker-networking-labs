@@ -204,7 +204,7 @@ docker context create my-server \
   --docker "host=ssh://user@server-ip"
 ```
 
-## DNS issues with WSL + docker setup
+## DNS issues with WSL + docker setup without docker desktop
 
 - sometimes your docker daemon is not able to get the correct DNS inside a VPN network let's say of a company.
 - hence, not able to connect to external network.
@@ -241,3 +241,92 @@ add the below data
 ```
 
 - save the file and again try the ping request
+
+
+## Docker / WSL development environment without docker desktop
+
+In Windows Subsystem for Linux, networking determines how Linux services (Docker, Flask, Node, etc.) communicate with Windows and the outside world.
+
+Two main modes exist:
+
+- NAT mode (stable, recommended)
+- Mirrored mode (advanced, experimental behavior)
+
+### NAT Mode (Recommended)
+
+Inside your windows .wslconfig
+
+```
+[wsl2]
+networkingMode=nat
+localhostForwarding=true
+```
+#### Architecture
+
+![WSL NAT Architecture](./media/wsl%20NAT%20architecture.png)
+
+
+#### How it works
+
+- WSL runs inside a virtual network
+- Windows acts as a gateway
+- Ports are explicitly forwarded via localhost
+
+Example:
+
+```
+python3 -m http.server 8000
+```
+
+Accessible from Windows:
+
+```
+curl http://localhost:8000
+```
+#### Advantages
+
+- Stable port forwarding
+- Reliable for Docker inside WSL
+- Works well with VS Code Remote WSL
+- Predictable networking behavior
+
+#### Best for
+
+- Web development (Flask, Node, React)
+- Docker-in-WSL workflows
+- Kubernetes learning environments
+- General development setups
+
+
+### Mirrored Mode
+
+Inside windows WSL config /%USERPROFILE%/.wslconf
+
+```
+[wsl2]
+networkingMode=mirrored
+```
+
+#### How it works
+
+- WSL shares the same network interface as Windows
+- No NAT translation layer
+- Direct access to Windows network stack
+
+#### Intended benefits
+
+- Same IP behavior as Windows
+- Better LAN integration
+- Reduced network abstraction layer
+
+#### Common issues
+
+Mirrored mode can cause:
+
+- localhost services not reachable
+- Docker port mapping failures
+- VS Code Remote WSL connection issues
+- Socket errors (e.g. 0x80072747)
+- Firewall/VPN conflicts
+
+
